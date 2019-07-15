@@ -1,11 +1,11 @@
-from aiohttp.test_utils import (
-        loop_context,
-        TestClient as _TestClient
-)
-from aiohttp_prometheus import setup_metrics
-from aiohttp import web
-import pytest
 import asyncio
+
+from aiohttp import web
+from aiohttp.test_utils import TestClient as _TestClient
+from aiohttp.test_utils import loop_context
+
+import pytest
+from aiohttp_prometheus import setup_metrics
 
 
 @pytest.fixture
@@ -38,4 +38,5 @@ def test_metrics_route(loop, test_client):
         assert 'request_latency_seconds' in text
         assert 'requests_total' in text
         assert 'requests_in_progress' in text
+
     loop.run_until_complete(test_get_metrics())

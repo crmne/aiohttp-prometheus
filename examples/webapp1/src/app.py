@@ -1,10 +1,12 @@
-from aiohttp import web
-from aiohttp_prometheus import setup_metrics
 import asyncio
+
+from aiohttp import web
+
+from aiohttp_prometheus import setup_metrics
+
 
 @asyncio.coroutine
 def error_middleware(app, handler):
-
     @asyncio.coroutine
     def middleware_handler(request):
         try:
@@ -19,13 +21,16 @@ def error_middleware(app, handler):
 
     return middleware_handler
 
+
 async def test(request):
     name = request.match_info.get('name', "Anonymous")
     text = "Hello, " + name
     return web.Response(text=text)
 
+
 async def test1(request):
-    1/0
+    1 / 0
+
 
 if __name__ == '__main__':
     app = web.Application(middlewares=[error_middleware])
