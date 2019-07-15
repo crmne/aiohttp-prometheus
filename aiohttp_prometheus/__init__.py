@@ -18,6 +18,7 @@ def aiohttp_prometheus(app_name):
                                                   request.method).dec()
         request.app['REQUEST_COUNT'].labels(
             app_name, request.method, request.path, response.status).inc()
+        return response
 
     return middleware_handler
 
