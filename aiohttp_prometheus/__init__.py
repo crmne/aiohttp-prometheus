@@ -19,7 +19,7 @@ def aiohttp_prometheus(app_name):
         request.app['REQUEST_COUNT'].labels(
             app_name, request.method, request.path, response.status).inc()
 
-    return aiohttp_prometheus
+    return middleware_handler
 
 
 async def metrics(request):
