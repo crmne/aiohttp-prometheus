@@ -32,7 +32,7 @@ async def metrics(request):
     return resp
 
 
-def setup_metrics(app, app_name):
+def setup_metrics(app, app_name, filter_path_fn=None):
     app['REQUEST_COUNT'] = Counter(
         'requests_total', 'Total Request Count',
         ['app_name', 'method', 'endpoint', 'http_status'])
@@ -43,5 +43,5 @@ def setup_metrics(app, app_name):
                                        'Requests in progress',
                                        ['app_name', 'endpoint', 'method'])
 
-    app.middlewares.insert(0, aiohttp_prometheus(app_name))
+    app.middlewares.insert(0, aiohttp_prometheus(app_name, filter_path_fn))
     app.router.add_get("/metrics", metrics)
