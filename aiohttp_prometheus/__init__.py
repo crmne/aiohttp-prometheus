@@ -11,16 +11,16 @@ def aiohttp_prometheus(app_name, filter_path_fn=None):
         if filter_path_fn:
             request_path = filter_path_fn(request_path)
         request['start_time'] = time.time()
-        request.app['REQUEST_IN_PROGRESS'].labels(app_name, request.path,
+        request.app['REQUEST_IN_PROGRESS'].labels(app_name, request_path,
                                                   request.method).inc()
         response = await handler(request)
         resp_time = time.time() - request['start_time']
         request.app['REQUEST_LATENCY'].labels(app_name,
-                                              request.path).observe(resp_time)
-        request.app['REQUEST_IN_PROGRESS'].labels(app_name, request.path,
+                                              request_path).observe(resp_time)
+        request.app['REQUEST_IN_PROGRESS'].labels(app_name, request_path,
                                                   request.method).dec()
         request.app['REQUEST_COUNT'].labels(
-            app_name, request.method, request.path, response.status).inc()
+            app_name, request.method, request_path, response.status).inc()
         return response
 
     return middleware_handler
