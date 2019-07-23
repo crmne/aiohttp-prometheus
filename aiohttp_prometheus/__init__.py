@@ -4,9 +4,12 @@ from aiohttp import web
 import prometheus_client
 
 
-def aiohttp_prometheus(app_name):
+def aiohttp_prometheus(app_name, filter_path_fn=None):
     @web.middleware
     async def middleware_handler(request, handler):
+        request_path = request.path
+        if filter_path_fn:
+            request_path = filter_path_fn(request_path)
         request['start_time'] = time.time()
         request.app['REQUEST_IN_PROGRESS'].labels(app_name, request.path,
                                                   request.method).inc()
